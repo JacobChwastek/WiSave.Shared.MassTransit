@@ -46,11 +46,11 @@ jobs:
             --include-symbols --include-source \
             /p:PackageVersion=$VERSION
 
-      - name: Push to NuGet.org
+      - name: Push to GitHub Packages
         run: |
           dotnet nuget push ./nupkgs/*.nupkg \
             --source "https://nuget.pkg.github.com/JacobChwastek/index.json" \
-            --api-key ${{ secrets.GH_PACKAGES_PAT }} \ 
+            --api-key ${{ secrets.GH_PACKAGES_PAT }} \
             --skip-duplicate
           
     
