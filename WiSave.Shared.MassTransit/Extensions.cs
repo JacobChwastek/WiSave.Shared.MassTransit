@@ -1,5 +1,7 @@
+using System.Text.Json.Serialization;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using WiSave.Shared.MassTransit.Observers;
 
 namespace WiSave.Shared.MassTransit;
 
@@ -12,6 +14,9 @@ public static class Extensions
         params Type[] consumerTypes)
         where TBus : class, IBus
     {
+        services.AddConsumeObserver<ConsumeObserver>();
+        services.AddConsumeObserver<PublishObserver>();
+
         services.AddMassTransit<TBus>(x =>
         {
             x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(includeNamespace: false));
@@ -26,12 +31,14 @@ public static class Extensions
                     h.Password(rabbitMqConfiguration.Password);
                 });
                 
+                
                 configureAdditional?.Invoke(cfg, context);
 
                 cfg.ConfigureEndpoints(context);
             });
         });
-
+        
         return services;
     }
+    
 }
