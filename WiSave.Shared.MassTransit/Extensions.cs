@@ -23,6 +23,13 @@ public static class Extensions
             
             x.AddConsumers(consumerTypes);
 
+            x.AddConfigureEndpointsCallback((context,name,cfg) =>
+            {
+                cfg.UseDelayedRedelivery(r => r.Intervals(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30)));
+                cfg.UseMessageRetry(r => r.Immediate(5));
+                cfg.UseInMemoryOutbox(context);
+            });
+            
             x.UsingRabbitMq((context, cfg) =>
             {
                 cfg.Host(rabbitMqConfiguration.Host, rabbitMqConfiguration.Vhost, h =>
