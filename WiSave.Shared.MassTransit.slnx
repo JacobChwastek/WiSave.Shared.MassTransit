@@ -1,0 +1,7 @@
+﻿<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="NuGet.Config" />
+    <File Path=".github\workflows\nuget-publish.yml" />
+  </Folder>
+  <Project Path="WiSave.Shared.MassTransit\WiSave.Shared.MassTransit.csproj" Type="Classic C#" />
+</Solution>
