@@ -1,4 +1,3 @@
-using System.Text.Json.Serialization;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
 using WiSave.Shared.MassTransit.Converters;
@@ -11,7 +10,7 @@ public static class Extensions
     public static IServiceCollection AddMessaging<TBus>(
         this IServiceCollection services,
         RabbitMqConfiguration rabbitMqConfiguration,
-        Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>? configureAdditional = null,
+        Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>? configureBroker = null,
         params Type[] consumerTypes)
         where TBus : class, IBus
     {
@@ -23,6 +22,8 @@ public static class Extensions
             x.SetEndpointNameFormatter(new KebabCaseEndpointNameFormatter(includeNamespace: false));
             
             x.AddConsumers(consumerTypes);
+            
+            x.AddDelayedMessageScheduler();
 
             x.AddConfigureEndpointsCallback((context,name,cfg) =>
             {
@@ -45,7 +46,7 @@ public static class Extensions
                     return options;
                 });
                 
-                configureAdditional?.Invoke(cfg, context);
+                configureBroker?.Invoke(cfg, context);
 
                 cfg.ConfigureEndpoints(context);
             });
