@@ -1,6 +1,7 @@
 using System.Text.Json.Serialization;
 using MassTransit;
 using Microsoft.Extensions.DependencyInjection;
+using WiSave.Shared.MassTransit.Converters;
 using WiSave.Shared.MassTransit.Observers;
 
 namespace WiSave.Shared.MassTransit;
@@ -38,6 +39,11 @@ public static class Extensions
                     h.Password(rabbitMqConfiguration.Password);
                 });
                 
+                cfg.ConfigureJsonSerializerOptions(options =>
+                {
+                    options.Converters.Add(new DateOnlyJsonConverter());
+                    return options;
+                });
                 
                 configureAdditional?.Invoke(cfg, context);
 
