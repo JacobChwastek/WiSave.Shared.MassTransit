@@ -11,6 +11,7 @@ public static class Extensions
         this IServiceCollection services,
         RabbitMqConfiguration rabbitMqConfiguration,
         Action<IRabbitMqBusFactoryConfigurator, IBusRegistrationContext>? configureBroker = null,
+        Action<IBusRegistrationConfigurator>? configureMassTransit = null,
         params Type[] consumerTypes)
         where TBus : class, IBus
     {
@@ -25,6 +26,8 @@ public static class Extensions
             
             x.AddDelayedMessageScheduler();
 
+            configureMassTransit?.Invoke(x);
+            
             x.AddConfigureEndpointsCallback((context,name,cfg) =>
             {
                 cfg.UseDelayedRedelivery(r => r.Intervals(TimeSpan.FromMinutes(5), TimeSpan.FromMinutes(15), TimeSpan.FromMinutes(30)));
