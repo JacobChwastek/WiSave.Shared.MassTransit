@@ -25,8 +25,6 @@ public static class Extensions
             x.AddConsumers(consumerTypes);
 
             x.AddDelayedMessageScheduler();
-
-            configureMassTransit?.Invoke(x);
             
             x.AddConfigureEndpointsCallback((context, _, cfg) =>
             {
@@ -55,6 +53,8 @@ public static class Extensions
 
                 cfg.ConfigureEndpoints(context);
             });
+            
+            configureMassTransit?.Invoke(x);
         });
 
         return services;
